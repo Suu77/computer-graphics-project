@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SEH Building - Lighting and Shading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 12px;
+            background: #e9e9e9;
+        }
+
+        .controls {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 8px 14px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #status {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        #hint {
+            color: #444;
+            font-size: 13px;
+        }
+
+        canvas {
+            background: #efefef;
+            display: block;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button id="btn10am">Time1: 10am</button>
+        <button id="btn5pm">Time2: 5pm</button>
+        <span id="status">Current Lighting: 10am</span>
+    </div>
+
+    <canvas id="gl-canvas" width="900" height="650"></canvas>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+    #version 300 es
+
+    in vec4 aPosition;
+    in vec2 aTexCoord;
+    in vec3 aNormal;
+
+    out vec2 vTexCoord;
+    out vec3 vNormal;
+    out vec3 vPosition;
+
+    uniform mat4 uModelViewMatrix;
+    uniform mat4 uProjectionMatrix;
+    uniform mat3 uNormalMatrix;
+
+    void main() {
+        vec4 pos = uModelViewMatrix * aPosition;
+        vPosition = pos.xyz;
+        vNormal = normalize(uNormalMatrix * aNormal);
+        vTexCoord = aTexCoord;
+        gl_Position = uProjectionMatrix * pos;
+    }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+    #version 300 es
+    precision mediump float;
+
+    in vec2 vTexCoord;
+    in vec3 vNormal;
+    in vec3 vPosition;
+
+    uniform sampler2D uTexture;
+    uniform vec4 uAmbientProduct;
+    uniform vec4 uDiffuseProduct;
+    uniform vec4 uSpecularProduct;
+    uniform vec4 uLightPosition;
+    uniform float uShininess;
+
+    out vec4 fColor;
+
+    void main() {
+        vec3 N = normalize(vNormal);
+
+        vec3 L = normalize(uLightPosition.xyz - vPosition);
+        vec3 E = normalize(-vPosition);
+        vec3 H = normalize(L + E);
+
+        vec3 texColor = texture(uTexture, vTexCoord).rgb;
+
+        vec3 warmBase = vec3(0.95, 0.76, 0.28);
+        vec3 baseColor = mix(warmBase, texColor, 0.10);
+
+        float Kd = max(dot(N, L), 0.0);
+
+        float sunShape = smoothstep(0.08, 0.92, Kd);
+        float Ks = pow(max(dot(N, H), 0.0), uShininess) * step(0.0, Kd);
+
+        float skyFill = max(dot(N, vec3(0.0, 1.0, 0.0)), 0.0);
+
+        float bottomFill = max(dot(N, vec3(0.0, -1.0, 0.0)), 0.0);
+        
+        vec3 ambient =
+            baseColor * uAmbientProduct.rgb * 0.78 +
+            baseColor * vec3(0.10, 0.08, 0.06) * skyFill * 0.35;
+
+        vec3 diffuse =
+            baseColor * uDiffuseProduct.rgb * (0.30 + 0.92 * sunShape);
+
+        vec3 specular =
+            uSpecularProduct.rgb * Ks * 0.22;
+
+        vec3 bounce =
+            vec3(0.22, 0.11, 0.16) * bottomFill * 0.32;
+
+        vec3 color = ambient + diffuse + specular + bounce;
+
+        color = color / (1.0 + color * 0.18);
+
+        fColor = vec4(color, 1.0);
+    }
+    </script>
+
+    <script src="../Common/initShaders.js"></script>
+    <script src="../Common/MVnew.js"></script>
+    <script src="sehBuilding.js"></script>
+</body>
+</html>
