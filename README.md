@@ -4,17 +4,17 @@ An interactive 3D graphics project built with **WebGL 2.0, JavaScript, GLSL, and
 
 ## Features
 
-- **24-hour day/night simulation** — The scene transitions through night, dawn, sunrise, morning, noon, sunset, dusk, and night.
-- **Dynamic lighting** — The light source moves based on the simulated time of day and changes ambient, diffuse, and specular lighting.
-- **Realistic water** — Includes animated water patterns, highlights, and a reflection of the Lincoln Memorial.
-- **Dynamic shadows** — The Memorial's ground shadow changes position and strength as the light source moves.
-- **Textured 3D environment** — Uses stone, grass, water, sky/cloud, and building textures.
-- **Procedural textures** — Generates stone, ground, and water textures directly in JavaScript.
-- **City background** — Includes multiple layers of buildings to create additional depth.
-- **Interactive camera** — Supports a fixed camera and an interactive one-point perspective camera with orbit and zoom controls.
-- **3D model loading** — Loads the Lincoln Memorial from STL files (@JB3Designs on Printables) and converts the model data into WebGL geometry.
-- **GLSL shaders** — Uses custom vertex and fragment shaders for lighting, materials, reflections, water effects, shadows, and color transitions.
-- **Real-time rendering** — Uses `requestAnimationFrame()` to continuously update the scene.
+- **24-hour day/night simulation**: The scene transitions through night, dawn, sunrise, morning, noon, sunset, dusk, and night.
+- **Dynamic lighting**: The light source moves based on the simulated time of day and changes ambient, diffuse, and specular lighting.
+- **Realistic water**: Includes animated water patterns, highlights, and a reflection of the Lincoln Memorial.
+- **Dynamic shadows**: The Memorial's ground shadow changes position and strength as the light source moves.
+- **Textured 3D environment**: Uses stone, grass, water, sky/cloud, and building textures.
+- **Procedural textures**: Generates stone, ground, and water textures directly in JavaScript.
+- **City background**: Includes multiple layers of buildings to create additional depth.
+- **Interactive camera**: Supports a fixed camera and an interactive one-point perspective camera with orbit and zoom controls.
+- **3D model loading**: Loads the Lincoln Memorial from STL files (@JB3Designs on Printables) and converts the model data into WebGL geometry.
+- **GLSL shaders**: Uses custom vertex and fragment shaders for lighting, materials, reflections, water effects, shadows, and color transitions.
+- **Real-time rendering**: Uses `requestAnimationFrame()` to continuously update the scene.
 
 ## How It Works
 
